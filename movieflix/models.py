@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 # Create your models here.
 class Movie(models.Model):
     Movie_ID = models.IntegerField(default=0, unique=True)
@@ -7,13 +8,17 @@ class Movie(models.Model):
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=200)
     IMDB_Rating = models.IntegerField(default=0)
+    slug = models.SlugField(blank=True, unique=True)
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.Title)
+        super(Movie, self).save(*args, **kwargs)
     def __str__(self):
         return self.Title
 
 class UserProfile(models.Model):
     User = models.OneToOneField(User, on_delete=models.CASCADE)
-    User_ID = models.IntegerField(default = 0, unique=True, primary_key=True)
+    User_ID = models.IntegerField(default=0, unique=True, primary_key=True)
     Role = models.CharField(max_length=20, blank=True)
     Genres = models.CharField(max_length=20, blank=True)
 
