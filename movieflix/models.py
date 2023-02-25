@@ -13,12 +13,8 @@ class Movie(models.Model):
 
 class UserProfile(models.Model):
     User = models.OneToOneField(User, on_delete=models.CASCADE)
-    # User_ID = models.IntegerField(default = 0, unique=True, primary_key=True)
-    # Email = models.CharField(max_length=200)
-    # Password = models.CharField(max_length=20)
+    User_ID = models.IntegerField(default = 0, unique=True, primary_key=True)
     Role = models.CharField(max_length=20, blank=True)
-    # First_Name = models.CharField(max_length=20)
-    # Last_Name = models.CharField(max_length=20)
     Genres = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
