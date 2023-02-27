@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+
+
 # Create your models here.
 class Movie(models.Model):
     Movie_ID = models.AutoField(primary_key=True)
@@ -7,6 +9,7 @@ class Movie(models.Model):
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=200)
     IMDB_Rating = models.IntegerField(default=0)
+    objects = models.Manager()
 
 
 class UserProfile(models.Model):
@@ -14,6 +17,7 @@ class UserProfile(models.Model):
     User_ID = models.IntegerField(default=0, unique=True, primary_key=True)
     Role = models.CharField(max_length=20, blank=True)
     Genres = models.CharField(max_length=20, blank=True)
+    objects = models.Manager()
 
 
 class Comment(models.Model):
@@ -21,6 +25,8 @@ class Comment(models.Model):
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
     Comment = models.CharField(max_length=200)
+    objects = models.Manager()
+    objects = models.Manager()
 
 
 class Rating(models.Model):
@@ -28,9 +34,11 @@ class Rating(models.Model):
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     User_Rating = models.IntegerField(default=0)
+    objects = models.Manager()
 
 
 class WatchedList(models.Model):
     WatchedList_ID = models.AutoField(primary_key=True)
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    objects = models.Manager()

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.parsers import JSONParser
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from movieflix_project.movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
