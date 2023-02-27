@@ -5,7 +5,7 @@ from django.http.response import JsonResponse
 from movieflix_project.movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
 from movieflix_project.movieflix.serializers import MovieSerializer, UserProfileSerializer, CommentSerializer, RatingSerializer, \
     WatchedListSerializer
-
+from django.core.files.storage import default_storage
 
 # Create your views here.
 def movieApi(request, id=0):
@@ -58,3 +58,9 @@ def commentApi(request, id=0):
         comment = Comment.objects.get(Comment_ID=id)
         comment.delete()
         return JsonResponse("Deleted Successfully!", safe=False)
+
+def SaveFile(request):
+    file=request.FILES['myFile']
+    file_name = default_storage.save(file.name,file)
+
+    return JsonResponse(file_name,safe=False)
