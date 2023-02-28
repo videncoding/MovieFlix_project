@@ -43,8 +43,8 @@ def movieApi(request, id=0):
 
 def commentApi(request, id=0):
     if request.method == 'GET':
-        comment = Comment.Comment.has_default(Movie_ID=id)
-        comment_serializer = CommentSerializer(comment, many=True)
+        comment = Comment.objects.get(Movie_ID=id)
+        comment_serializer = CommentSerializer(comment.Comment, many=True)
         return JsonResponse(comment_serializer.data, safe=False)
     elif request.method == 'POST':
         comment_data = JSONParser().parse(request)
@@ -69,15 +69,15 @@ def commentApi(request, id=0):
 
 def ratingApi(request, id=0):
     if request.method == 'GET':
-        rating = Rating.User_Rating.get(Movie_ID=id)
-        rating_serializer = RatingSerializer(rating, many=True)
+        rating = Rating.objects.get(Movie_ID=id)
+        rating_serializer = RatingSerializer(rating.User_Rating, many=True)
         return JsonResponse(rating_serializer.data, safe=False)
     elif request.method == 'POST':
         rating_data = JSONParser().parse(request)
         rating_serializer = RatingSerializer(data=rating_data)
         if rating_serializer.is_valid():
             rating_serializer.save()
-            return JsonResponse("Added Successfully!", safe=False)
+            return JsonResponse("Rating Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
     elif request.method == 'PUT':
         rating_data = JSONParser().parse(request)
