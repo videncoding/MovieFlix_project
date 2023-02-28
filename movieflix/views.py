@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
-from movieflix_project.movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
-from movieflix_project.movieflix.serializers import MovieSerializer, UserProfileSerializer, CommentSerializer, \
+from movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
+from movieflix.serializers import MovieSerializer, UserProfileSerializer, CommentSerializer, \
     RatingSerializer, \
     WatchedListSerializer
 from django.core.files.storage import default_storage
