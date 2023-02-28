@@ -26,7 +26,6 @@ class Comment(models.Model):
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
     Comment = models.CharField(max_length=200)
     objects = models.Manager()
-    objects = models.Manager()
 
 
 class Rating(models.Model):
