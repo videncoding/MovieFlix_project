@@ -24,7 +24,8 @@ def movieApi(request, id=0):
         movie_serializer = MovieSerializer(data=movie_data)
         if movie_serializer.is_valid():
             movie_serializer.save()
-            return JsonResponse("Added Successfully!", safe=False)
+            movie_serializer1 = MovieSerializer(movie, many=True)
+            return JsonResponse(movie_serializer1, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
     elif request.method == 'PUT':
         movie_data = JSONParser().parse(request)
