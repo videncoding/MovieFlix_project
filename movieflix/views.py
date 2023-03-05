@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import render
 from django.http.response import HttpResponse
+from movieflix.models import Movie
 
 def index(request):
     return HttpResponse('Hello')
@@ -22,7 +23,11 @@ def mycomments(request):
 
 def detail(request):
     context_dict = {}
-    return render(request, 'profile.html', context=context_dict)
+    if request.method == 'POST':
+        Movie_ID = request.POST['Movie_ID']
+        Title = request.POST['Title']
+
+    return HttpResponse("Hi there")
 
 def register(request):
     context_dict = {}
