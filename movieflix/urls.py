@@ -9,8 +9,8 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('logout/', views.logout, name='logout'),
     path('profile/', views.profile, name='profile'),
-    path('profile/watchlist/', views.watchlist, name='watchlist'),
-    path('profile/mycomments/', views.mycomments, name='mycomments'),
-    path('<slug: movie_title_slug>/', views.detail, name='detail')
+    path('watchlist/', views.watchlist, name='watchlist'),
+    path('profile/mycomments/userid', views.mycomments, name='mycomments'),
+    path('<slug:movie_title_slug>/', views.detail, name='detail')
 ]
 

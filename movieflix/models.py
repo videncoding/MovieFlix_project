@@ -3,12 +3,12 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 # Create your models here.
 class Movie(models.Model):
-    Movie_ID = models.IntegerField(default=0, unique=True)
+    Movie_ID = models.AutoField(unique=True, primary_key=True)
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=200)
     IMDB_Rating = models.IntegerField(default=0)
-    slug = models.SlugField(blank=True, unique=True)
+    slug = models.SlugField(unique=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.Title)
@@ -18,14 +18,13 @@ class Movie(models.Model):
 
 class UserProfile(models.Model):
     User = models.OneToOneField(User, on_delete=models.CASCADE)
-    User_ID = models.IntegerField(default=0, unique=True, primary_key=True)
     Role = models.CharField(max_length=20, blank=True)
     Genres = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         return self.First_Name + self.Last_Name
 class Comment(models.Model):
-    Comment_ID = models.IntegerField(default=0, unique=True)
+    Comment_ID = models.AutoField(primary_key=True)
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
     Comment = models.CharField(max_length=200)
@@ -35,7 +34,7 @@ class Comment(models.Model):
 
 
 class Rating(models.Model):
-    Rating_ID = models.IntegerField(default=0, unique=True)
+    Rating_ID = models.AutoField(primary_key=True)
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     User_Rating = models.IntegerField(default=0)
@@ -44,7 +43,7 @@ class Rating(models.Model):
         return "{}: Rating {}".format(self.Movie_ID, self.Rating_ID)
 
 class WatchedList(models.Model):
-    WatchedList_ID = models.IntegerField(default=0, unique=True)
+    WatchedList_ID = models.AutoField(primary_key=True)
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
