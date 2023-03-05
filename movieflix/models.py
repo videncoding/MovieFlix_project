@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
-# Create your models here.
+from django.contrib.auth.models import User
 class Movie(models.Model):
     Movie_ID = models.IntegerField(default=0, unique=True)
     Title = models.CharField(max_length=50)
@@ -50,3 +50,16 @@ class WatchedList(models.Model):
 
     def __str__(self):
         return "Watched list of user {}".format(self.User_ID)
+
+# 用户认证模块
+class UserProfile(models.Model):
+
+    # 生成了一个user对象
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    #给user增加的两个属性分别是website和picture
+    website = models.URLField(blank=True)
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+    #用来分会用户名字
+    def __str__(self):
+        return self.user.username
