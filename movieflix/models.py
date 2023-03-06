@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 # Create your models here.
 class Movie(models.Model):
-    Movie_ID = models.AutoField(unique=True, primary_key=True)
+    Movie_ID = models.IntegerField(unique=True, primary_key=True)
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=200)
@@ -17,35 +17,37 @@ class Movie(models.Model):
         return self.Title
 
 class UserProfile(models.Model):
-    User = models.OneToOneField(User, on_delete=models.CASCADE)
-    Role = models.CharField(max_length=20, blank=True)
-    Genres = models.CharField(max_length=20, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    role = models.CharField(max_length=20, blank=True)
+    genres = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return self.First_Name + self.Last_Name
+        return self.first_name + self.last_name
 class Comment(models.Model):
-    Comment_ID = models.AutoField(primary_key=True)
-    User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    Comment = models.CharField(max_length=200)
+    comment_ID = models.AutoField(primary_key=True)
+    user_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=200)
     def __str__(self):
-        return "{}: Comment {}".format(self.Movie_ID, self.Comment_ID)
+        return "{}: Comment {}".format(self.movie_ID, self.comment_ID)
 
 
 
 class Rating(models.Model):
-    Rating_ID = models.AutoField(primary_key=True)
-    Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    User_Rating = models.IntegerField(default=0)
+    rating_ID = models.AutoField(primary_key=True)
+    movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user_Rating = models.IntegerField(default=0)
 
     def __str__(self):
-        return "{}: Rating {}".format(self.Movie_ID, self.Rating_ID)
+        return "{}: Rating {}".format(self.movie_ID, self.rating_ID)
 
 class WatchedList(models.Model):
-    WatchedList_ID = models.AutoField(primary_key=True)
-    User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    watchedList_ID = models.AutoField(primary_key=True)
+    user_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
     def __str__(self):
-        return "Watched list of user {}".format(self.User_ID)
+        return "Watched list of user {}".format(self.user_ID)
