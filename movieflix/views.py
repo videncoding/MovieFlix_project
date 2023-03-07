@@ -147,71 +147,28 @@ def userprofileLoginApi(request):
         if request.method == 'POST':
             data = json.loads(request.body)
             filter_user = UserProfile.objects.filter(Username=data['Username'])
-           # userprofile_serializer = UserProfileSerializer(data=filter_user)
-           # return JsonResponse(filter_user, safe=False)
             if not len(filter_user):
                 res = {
                     'success': False,
-                    'mess': '用户名未注册'
+                    'mess': 'Username not registered'
                 }
                 return JsonResponse(res, safe=False)
-            # user = UserProfileSerializer(filter_user, many=True).data[0]
+            User_data = UserProfile.objects.get(Username=data['Username'])
 
-            Username = data['Username']
-            Password = data['Password']
-            Username_temp = UserProfile.objects.get(Username=Username)
-            database_Username= UserProfileSerializer(Username_temp, many=True)
-
-            return JsonResponse(database_Username, safe=False)
-            # return JsonResponse(comment_serializer.data, safe=False)
-
-            user = authenticate(Username=Username, Password=Password)
-            # return  JsonResponse(user, safe=False)
-            if user:
-                    if user.is_active:
-                        res = {
-                            'success': True,
-                            'data': user
-                        }
-                        return JsonResponse(res, safe=False)
-            else:
-
-                    res = {
-                        'success': False,
-                        'mess': '密码错误'
-                    }
-                    return JsonResponse(res, safe=False)
-
-
-
-
-
-
-
-
-            # print(user)
-            # return JsonResponse(user, safe=False)
-            check_pass_result = check_password(data['Password'], user['Password'])
-            # print(check_pass_result)
-            # return check_pass_result
-
-            # return JsonResponse(check_pass_result, safe=False)
-            # filter_password = UserProfile.objects.filter(Username=data['Password'])
-            # return type(filter_password)
-            user1 = UserProfile.objects.get(Password=data['Password'])
-            return  user1
-            if not user1.isvalid():
+            if not data['Password']==User_data.Password:
                 res = {
                     'success': False,
-                    'mess': '密码错误'
+                    'mess': 'Password error'
                 }
                 return JsonResponse(res, safe=False)
 
             res = {
                 'success': True,
-                'data': user
+                'mess': 'Login Successfully'
             }
             return JsonResponse(res, safe=False)
+
+
 
 
 
