@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Movie(models.Model):
-    Movie_ID = models.AutoField(primary_key=True)
+    Movie_ID = models.IntegerField(default=0, unique=True, primary_key=True)
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=200)
@@ -13,8 +13,11 @@ class Movie(models.Model):
 
 
 class UserProfile(models.Model):
-    User = models.OneToOneField(User, on_delete=models.CASCADE)
     User_ID = models.IntegerField(default=0, unique=True, primary_key=True)
+    Username = models.IntegerField(default=0, unique=True)
+    First_name = models.CharField(max_length=30, blank=True)
+    Last_name = models.CharField(max_length=150, blank=True)
+    Password = models.CharField(max_length=30, blank=True)
     Role = models.CharField(max_length=20, blank=True)
     Genres = models.CharField(max_length=20, blank=True)
     objects = models.Manager()

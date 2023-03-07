@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from movieflix_project.movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
+from movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -9,16 +9,22 @@ class MovieSerializer(serializers.ModelSerializer):
                   'Title',
                   'Poster',
                   'Description',
-                  'IMDB_Rating')
+                  'IMDB_Rating'
+                  )
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('User',
-                  'User_ID',
-                  'Role',
-                  'Genres')
+        fields = (
+            'User_ID',
+            'Username',
+            'First_name',
+            'Last_name',
+            'Password',
+            'Role',
+            'Genres',
+        )
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -27,7 +33,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ('Comment_ID',
                   'User_ID',
                   'Movie_ID',
-                  'Comment')
+                  'Comment',
+                  )
 
 
 class RatingSerializer(serializers.ModelSerializer):
@@ -36,7 +43,8 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = ('Rating_ID',
                   'Movie_ID',
                   'User_ID',
-                  'User_Rating')
+                  'User_Rating',
+                  )
 
 
 class WatchedListSerializer(serializers.ModelSerializer):
@@ -44,4 +52,5 @@ class WatchedListSerializer(serializers.ModelSerializer):
         model = WatchedList
         fields = ('WatchedList_ID',
                   'User_ID',
-                  'Movie_ID')
+                  'Movie_ID',
+                  )
