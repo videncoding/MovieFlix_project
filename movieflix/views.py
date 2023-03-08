@@ -16,22 +16,20 @@ import json
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-def movieApi(request, id=0):
+def movieApi(request):
     if request.method == 'GET':
         movie = Movie.objects.all()
         movie_serializer = MovieSerializer(movie, many=True)
         return JsonResponse(movie_serializer.data, safe=False)
     elif request.method == 'POST':
-        movie = Movie.objects.get(Movie_ID=id)
-        if movie.is_valid():
-            movie_serializer = MovieSerializer(movie, many=True)
-            return JsonResponse(movie_serializer.data, safe=False)
-        movie_data = JSONParser().parse(request)
-        movie_serializer = MovieSerializer(data=movie_data)
+        data = JSONParser().parse(request)
+        filter_movie = Movie.objects.filter(Movie_ID=data['Movie_ID'])
+        if not filter_movie.count() ==0:
+            return JsonResponse(data, safe=False)
+        movie_serializer = MovieSerializer(data=data)
         if movie_serializer.is_valid():
             movie_serializer.save()
-            movie_serializer1 = MovieSerializer(movie, many=True)
-            return JsonResponse(movie_serializer1, safe=False)
+            return JsonResponse(data, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
     # elif request.method == 'PUT':
     #     movie_data = JSONParser().parse(request)
