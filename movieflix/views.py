@@ -31,26 +31,11 @@ def movieApi(request):
             movie_serializer.save()
             return JsonResponse(data, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
-    # elif request.method == 'PUT':
-    #     movie_data = JSONParser().parse(request)
-    #     movie = Movie.objects.get(Movie_ID=movie_data['Movie_ID'])
-    #     movie_serializer = MovieSerializer(movie, data=movie_data)
-    #     if movie_serializer.is_valid():
-    #         movie_serializer.save()
-    #         return JsonResponse("Updated Successfully", safe=False)
-    #     return JsonResponse("Failed to Update", safe=False)
-    # elif request.method == 'DELETE':
-    #     movie = Movie.objects.get(Movie_ID=id)
-    #     movie.delete()
-    #     return JsonResponse("Deleted Successfully!", safe=False)
+
 
 
 def commentAddApi(request):
-    if request.method == 'GET':
-        comment = Comment.objects.all()
-        comment_serializer = CommentSerializer(comment, many=True)
-        return JsonResponse(comment_serializer.data, safe=False)
-    elif request.method == 'POST':
+     if request.method == 'POST':
         comment_data = JSONParser().parse(request)
         comment_serializer = CommentSerializer(data=comment_data)
         if comment_serializer.is_valid():
@@ -65,10 +50,10 @@ def commentGetApi(request):
         comment_data=Comment.objects.filter(Movie_ID=data['Movie_ID'])
         comment_serializer = CommentSerializer(comment_data, many=True)
         return JsonResponse(comment_serializer.data, safe=False)
-def ratingApi(request, id=0):
+def ratingAddApi(request):
     if request.method == 'GET':
-        rating = Rating.objects.get(Movie_ID=id)
-        rating_serializer = RatingSerializer(rating.User_Rating, many=True)
+        rating = Rating.objects.all()
+        rating_serializer = RatingSerializer(rating, many=True)
         return JsonResponse(rating_serializer.data, safe=False)
     elif request.method == 'POST':
         rating_data = JSONParser().parse(request)
@@ -77,18 +62,6 @@ def ratingApi(request, id=0):
             rating_serializer.save()
             return JsonResponse("Rating Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
-    elif request.method == 'PUT':
-        rating_data = JSONParser().parse(request)
-        rating = Rating.objects.get(Rating_ID=rating_data['Rating_ID'])
-        rating_serializer = RatingSerializer(rating, data=rating_data)
-        if rating_serializer.is_valid():
-            rating_serializer.save()
-            return JsonResponse("Updated Successfully", safe=False)
-        return JsonResponse("Failed to Update", safe=False)
-    elif request.method == 'DELETE':
-        rating = Rating.objects.get(Rating_ID=id)
-        rating.delete()
-        return JsonResponse("Deleted Successfully!", safe=False)
 
 def watchedListApi(request, id=0):
     if request.method == 'GET':
@@ -98,24 +71,11 @@ def watchedListApi(request, id=0):
         movie_serializer = MovieSerializer(movieList, many=True)
         return JsonResponse(movie_serializer.data, safe=False)
     elif request.method == 'POST':
-        watchList_data = JSONParser().parse(request)
-        watchList_serializer = WatchedListSerializer(data=watchList_data)
-        if watchList_serializer.is_valid():
-            watchList_serializer.save()
-            return JsonResponse("Added Successfully!", safe=False)
-        return JsonResponse("Failed to Add.", safe=False)
-    elif request.method == 'PUT':
-        watchedList_data = JSONParser().parse(request)
-        watchedList = WatchedList.objects.get(WatchedLIST_ID=watchedList_data['WatchedList_ID'])
-        watchedList_serializer = WatchedListSerializer(watchedList, data=watchedList_data)
-        if watchedList_serializer.is_valid():
-            watchedList_serializer.save()
-            return JsonResponse("Updated Successfully", safe=False)
-        return JsonResponse("Failed to Update", safe=False)
-    elif request.method == 'DELETE':
-        watchedList = WatchedList.objects.get(Movie_ID=id)
-        watchedList.delete()
-        return JsonResponse("Deleted Successfully!", safe=False)
+        data = json.loads(request.body)
+        watchedList_data = Comment.objects.filter(User_ID=data['User_ID'])
+        watchedList_serializer = CommentSerializer(watchedList_data, many=True)
+        return JsonResponse(watchedList_serializer, safe=False)
+
 def userprofileApi(request):
     if request.method == 'GET':
         userprofile = UserProfile.objects.all()
