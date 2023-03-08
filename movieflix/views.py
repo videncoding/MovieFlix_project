@@ -94,7 +94,7 @@ def watchedListAddApi(request):
         return JsonResponse("Failed to Add.", safe=False)
 
 
-def userprofileApi(request):
+def userprofileRegisterApi(request):
     if request.method == 'GET':
         userprofile = UserProfile.objects.all()
         userprofile_serializer = UserProfileSerializer(userprofile, many=True)
@@ -102,16 +102,13 @@ def userprofileApi(request):
     elif request.method == 'POST':
         userprofile_data = JSONParser().parse(request)
         userprofile_serializer = UserProfileSerializer(data=userprofile_data)
+        if userprofile_data['Username'] == "admin" and userprofile_data['Password'] == "admin":
+            userprofile_data.is_staff=True
         if userprofile_serializer.is_valid():
             userprofile_serializer.save()
             return JsonResponse("Added Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
-    # elif request.method == 'DELETE':
-    #     id=request.get('User_ID')
-    #     userprofile_serializer = UserProfileSerializer(data=id)
-    #     userprofile = UserProfile.objects.get(User_ID=userprofile_serializer)
-    #     userprofile.delete()
-    #     return JsonResponse("Deleted Successfully!", safe=False)
+
 def userprofileGetApi(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -152,6 +149,7 @@ def userprofileLoginApi(request):
         res = {
             'success': True,
             'User_ID': User_data.User_ID,
+            'isStaff': User_data.is_staff,
             'mess': 'Login Successfully'
         }
         return JsonResponse(res, safe=False)
