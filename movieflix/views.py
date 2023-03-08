@@ -81,7 +81,13 @@ def watchedListSearchApi(request):
         data = json.loads(request.body)
         watched_data = WatchedList.objects.filter(User_ID=data['User_ID'])
         watched_serializer = WatchedListSerializer(watched_data, many=True)
-        return JsonResponse(watched_serializer.data, safe=False)
+        res={}
+        for Watched in watched_data:
+            movie=Movie.objects.get(Movie_ID=Watched.Movie_ID)
+            movie_serializer = MovieSerializer(movie, many=True)
+            res=res+movie_serializer
+        return JsonResponse(res, safe=False)
+
 
 
 def watchedListAddApi(request):
