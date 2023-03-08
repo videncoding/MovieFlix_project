@@ -9,14 +9,14 @@ from movieflix.serializers import MovieSerializer, UserProfileSerializer, Commen
     WatchedListSerializer
 from django.core.files.storage import default_storage
 
-
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password, check_password
 import json
 from django.contrib.auth.decorators import login_required
 
+
 # Create your views here.
-def movieApi(request):
+def movieGetApi(request):
     if request.method == 'GET':
         movie = Movie.objects.all()
         movie_serializer = MovieSerializer(movie, many=True)
@@ -24,7 +24,7 @@ def movieApi(request):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         filter_movie = Movie.objects.filter(Movie_ID=data['Movie_ID'])
-        if not filter_movie.count() ==0:
+        if not filter_movie.count() == 0:
             return JsonResponse(data, safe=False)
         movie_serializer = MovieSerializer(data=data)
         if movie_serializer.is_valid():
@@ -32,10 +32,16 @@ def movieApi(request):
             return JsonResponse(data, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
+def movieSearchApi(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        movie_data = Movie.objects.filter(Movie_ID=data['Movie_ID'])
+        movie_serializer = MovieSerializer(movie_data, many=True)
+        return JsonResponse(movie_serializer.data, safe=False)
 
 
 def commentAddApi(request):
-     if request.method == 'POST':
+    if request.method == 'POST':
         comment_data = JSONParser().parse(request)
         comment_serializer = CommentSerializer(data=comment_data)
         if comment_serializer.is_valid():
@@ -47,9 +53,11 @@ def commentAddApi(request):
 def commentGetApi(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        comment_data=Comment.objects.filter(Movie_ID=data['Movie_ID'])
+        comment_data = Comment.objects.filter(Movie_ID=data['Movie_ID'])
         comment_serializer = CommentSerializer(comment_data, many=True)
         return JsonResponse(comment_serializer.data, safe=False)
+
+
 def ratingAddApi(request):
     if request.method == 'GET':
         rating = Rating.objects.all()
@@ -63,18 +71,28 @@ def ratingAddApi(request):
             return JsonResponse("Rating Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
-def watchedListApi(request, id=0):
+
+def watchedListSearchApi(request):
     if request.method == 'GET':
-        watchedList = WatchedList.objects.get(User_ID=id)
-        movie = watchedList.Movie_ID
-        movieList = Movie.objects.get(Movie_ID=movie)
-        movie_serializer = MovieSerializer(movieList, many=True)
-        return JsonResponse(movie_serializer.data, safe=False)
+        watchedList = WatchedList.objects.all()
+        watchedList_serializer = WatchedListSerializer(watchedList, many=True)
+        return JsonResponse(watchedList_serializer.data, safe=False)
     elif request.method == 'POST':
         data = json.loads(request.body)
-        watchedList_data = Comment.objects.filter(User_ID=data['User_ID'])
-        watchedList_serializer = CommentSerializer(watchedList_data, many=True)
-        return JsonResponse(watchedList_serializer, safe=False)
+        watched_data = WatchedList.objects.filter(User_ID=data['User_ID'])
+        watched_serializer = WatchedListSerializer(watched_data, many=True)
+        return JsonResponse(watched_serializer.data, safe=False)
+
+
+def watchedListAddApi(request):
+    if request.method == 'POST':
+        watchedList_data = JSONParser().parse(request)
+        watchedList_serializer = WatchedListSerializer(data=watchedList_data)
+        if watchedList_serializer.is_valid():
+            watchedList_serializer.save()
+            return JsonResponse("WatchedList added Successfully!", safe=False)
+        return JsonResponse("Failed to Add.", safe=False)
+
 
 def userprofileApi(request):
     if request.method == 'GET':
@@ -95,36 +113,32 @@ def userprofileApi(request):
     #     userprofile.delete()
     #     return JsonResponse("Deleted Successfully!", safe=False)
 
+
 def userprofileLoginApi(request):
-        if request.method == 'POST':
-            data = json.loads(request.body)
-            filter_user = UserProfile.objects.filter(Username=data['Username'])
-            if not len(filter_user):
-                res = {
-                    'success': False,
-                    'mess': 'Username not registered'
-                }
-                return JsonResponse(res, safe=False)
-            User_data = UserProfile.objects.get(Username=data['Username'])
-
-            if not data['Password']==User_data.Password:
-                res = {
-                    'success': False,
-                    'mess': 'Password error'
-                }
-                return JsonResponse(res, safe=False)
-
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        filter_user = UserProfile.objects.filter(Username=data['Username'])
+        if not len(filter_user):
             res = {
-                'success': True,
-                'User_ID':User_data.User_ID,
-                'mess': 'Login Successfully'
+                'success': False,
+                'mess': 'Username not registered'
+            }
+            return JsonResponse(res, safe=False)
+        User_data = UserProfile.objects.get(Username=data['Username'])
+
+        if not data['Password'] == User_data.Password:
+            res = {
+                'success': False,
+                'mess': 'Password error'
             }
             return JsonResponse(res, safe=False)
 
-
-
-
-
+        res = {
+            'success': True,
+            'User_ID': User_data.User_ID,
+            'mess': 'Login Successfully'
+        }
+        return JsonResponse(res, safe=False)
 
 
 def SaveFile(request):
