@@ -7,8 +7,9 @@ from django.conf import settings
 urlpatterns = [
                   path('movie/', csrf_exempt(views.movieApi)),
                   path(r'^movie/([0-9]+)$', views.movieApi),
-                  path('comment/', csrf_exempt(views.commentApi)),
-                  path('comment/([0-9]+)', views.commentApi),
+                  path('comment/commentAdd', csrf_exempt(views.commentAddApi)),
+                  path('comment/([0-9]+)', views.commentAddApi),
+                  path('comment/commentGet', csrf_exempt(views.commentGetApi)),
                   path('movie/SaveFile', views.SaveFile),
                   path('rating/', views.ratingApi),
                   path('rating/([0-9]+)', views.ratingApi),
