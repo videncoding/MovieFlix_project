@@ -16,5 +16,5 @@ urlpatterns = [
                   path('userprofile/', csrf_exempt(views.userprofileApi)),
                   path('userprofile/register', csrf_exempt(views.userprofileApi)),
                   path('userprofile/login', csrf_exempt(views.userprofileLoginApi)),
-
+                  path('userprofile/get', csrf_exempt(views.userprofileGetApi)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

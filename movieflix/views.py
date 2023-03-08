@@ -112,6 +112,22 @@ def userprofileApi(request):
     #     userprofile = UserProfile.objects.get(User_ID=userprofile_serializer)
     #     userprofile.delete()
     #     return JsonResponse("Deleted Successfully!", safe=False)
+def userprofileGetApi(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        userprofile_data = UserProfile.objects.filter(User_ID=data['User_ID'])
+        userprofile_serializer = UserProfileSerializer(userprofile_data, many=True)
+        return JsonResponse(userprofile_serializer.data, safe=False)
+
+def userprofilePutApi(request):
+    if request.method == 'PUT':
+        userprofile_data = JSONParser().parse(request)
+        useeprofile=UserProfile.objects.get(User_ID=userprofile_data['User_ID'])
+        userprofile_serializer = UserProfileSerializer(useeprofile, data=userprofile_data)
+        if userprofile_serializer.is_valid():
+            userprofile_serializer.save()
+            return JsonResponse("Updated Successfully!",safe=False)
+        return JsonResponse("Failed to Update.",safe=False)
 
 
 def userprofileLoginApi(request):
