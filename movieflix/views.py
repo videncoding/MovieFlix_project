@@ -102,10 +102,11 @@ def userprofileRegisterApi(request):
     elif request.method == 'POST':
         userprofile_data = JSONParser().parse(request)
         userprofile_serializer = UserProfileSerializer(data=userprofile_data)
-        if userprofile_data['Username'] == "admin" and userprofile_data['Password'] == "admin":
-            userprofile_data.is_staff=True
         if userprofile_serializer.is_valid():
             userprofile_serializer.save()
+            if userprofile_data['Email'] == "admin@admin.com" and userprofile_data['Password'] == "admin":
+                user_admin=UserProfile.objects.get(Username=userprofile_data['Username'])
+                user_admin.is_staff=True
             return JsonResponse("Added Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
@@ -130,14 +131,14 @@ def userprofilePutApi(request):
 def userprofileLoginApi(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        filter_user = UserProfile.objects.filter(Username=data['Username'])
+        filter_user = UserProfile.objects.filter(Email=data['Email'])
         if not len(filter_user):
             res = {
                 'success': False,
-                'mess': 'Username not registered'
+                'mess': 'Email not registered'
             }
             return JsonResponse(res, safe=False)
-        User_data = UserProfile.objects.get(Username=data['Username'])
+        User_data = UserProfile.objects.get(Email=data['Email'])
 
         if not data['Password'] == User_data.Password:
             res = {
@@ -150,6 +151,7 @@ def userprofileLoginApi(request):
             'success': True,
             'User_ID': User_data.User_ID,
             'isStaff': User_data.is_staff,
+            'Genres':User_data.Genres,
             'mess': 'Login Successfully'
         }
         return JsonResponse(res, safe=False)
