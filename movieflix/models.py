@@ -1,53 +1,48 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.template.defaultfilters import slugify
+
+
+
 # Create your models here.
 class Movie(models.Model):
-    Movie_ID = models.IntegerField(unique=True, primary_key=True)
+    Movie_ID = models.IntegerField(default=0, unique=True, primary_key=True)
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=200)
     IMDB_Rating = models.IntegerField(default=0)
-    slug = models.SlugField(unique=True)
+    objects = models.Manager()
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.Title)
-        super(Movie, self).save(*args, **kwargs)
-    def __str__(self):
-        return self.Title
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    role = models.CharField(max_length=20, blank=True)
-    genres = models.CharField(max_length=20, blank=True)
+    User_ID = models.IntegerField(default=0, unique=True, primary_key=True)
+    Username = models.IntegerField(default=0, unique=True)
+    First_name = models.CharField(max_length=30, blank=True)
+    Last_name = models.CharField(max_length=150, blank=True)
+    Password = models.CharField(max_length=30, blank=True)
+    Role = models.CharField(max_length=20, blank=True)
+    Genres = models.CharField(max_length=20, blank=True)
+    objects = models.Manager()
 
-    def __str__(self):
-        return self.first_name + self.last_name
+
 class Comment(models.Model):
-    comment_ID = models.AutoField(primary_key=True)
-    user_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    comment = models.CharField(max_length=200)
-    def __str__(self):
-        return "{}: Comment {}".format(self.movie_ID, self.comment_ID)
-
+    Comment_ID = models.AutoField(primary_key=True)
+    User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    Comment = models.CharField(max_length=200)
+    objects = models.Manager()
 
 
 class Rating(models.Model):
-    rating_ID = models.AutoField(primary_key=True)
-    movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    user_Rating = models.IntegerField(default=0)
+    Rating_ID = models.AutoField(primary_key=True)
+    Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    User_Rating = models.IntegerField(default=0)
+    objects = models.Manager()
 
-    def __str__(self):
-        return "{}: Rating {}".format(self.movie_ID, self.rating_ID)
 
 class WatchedList(models.Model):
-    watchedList_ID = models.AutoField(primary_key=True)
-    user_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    WatchedList_ID = models.AutoField(primary_key=True)
+    User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    objects = models.Manager()
 
-    def __str__(self):
-        return "Watched list of user {}".format(self.user_ID)

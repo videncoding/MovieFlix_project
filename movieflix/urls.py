@@ -1,16 +1,22 @@
-from django.urls import path
 from movieflix import views
-
-app_name = 'movieflix'
+from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('login/', views.login, name='login'),
-    path('register/', views.register, name='register'),
-    path('logout/', views.logout, name='logout'),
-    path('profile/', views.profile, name='profile'),
-    path('watchlist/', views.watchlist, name='watchlist'),
-    path('profile/mycomments/userid', views.mycomments, name='mycomments'),
-    path('<slug:movie_title_slug>/', views.detail, name='detail')
-]
+                  path('movie/movieGet', csrf_exempt(views.movieGetApi)),
+                  path('movie/movieSearch', csrf_exempt(views.movieSearchApi)),
+                  path('comment/commentAdd', csrf_exempt(views.commentAddApi)),
+                  path('comment/commentGet', csrf_exempt(views.commentGetApi)),
+                  path('movie/SaveFile', views.SaveFile),
+                  path('rating/ratingAdd', csrf_exempt(views.ratingAddApi)),
+                  path('watchedList/watchedListAdd', csrf_exempt(views.watchedListAddApi)),
+                  path('watchedList/watchedListSearch', csrf_exempt(views.watchedListSearchApi)),
+                  path('userprofile/', csrf_exempt(views.userprofileRegisterApi)),
+                  path('userprofile/register', csrf_exempt(views.userprofileRegisterApi)),
+                  path('userprofile/login', csrf_exempt(views.userprofileLoginApi)),
+                  path('userprofile/get', csrf_exempt(views.userprofileGetApi)),
+                  path('userprofile/put', csrf_exempt(views.userprofilePutApi)),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
