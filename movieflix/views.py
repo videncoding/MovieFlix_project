@@ -1,6 +1,3 @@
-from django.contrib.auth import authenticate
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
@@ -8,11 +5,7 @@ from movieflix.serializers import MovieSerializer, UserProfileSerializer, Commen
     RatingSerializer, \
     WatchedListSerializer
 from django.core.files.storage import default_storage
-
-from rest_framework.response import Response
-from django.contrib.auth.hashers import make_password, check_password
 import json
-from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -25,11 +18,29 @@ def movieGetApi(request):
         data = JSONParser().parse(request)
         filter_movie = Movie.objects.filter(Movie_ID=data['Movie_ID'])
         if not filter_movie.count() == 0:
-            return JsonResponse(data, safe=False)
+            movie = Movie.objects.get(Movie_ID=data['Movie_ID'])
+            res = {
+                "Movie_ID": movie.Movie_ID,
+                "Title": movie.Title,
+                "Poster": movie.Poster,
+                "Description": movie.Description,
+                "IMDB_Rating": movie.IMDB_Rating,
+                "User_Rating": movie.User_Rating
+            }
+            return JsonResponse(res, safe=False)
         movie_serializer = MovieSerializer(data=data)
         if movie_serializer.is_valid():
             movie_serializer.save()
-            return JsonResponse(data, safe=False)
+            movie=Movie.objects.get(Movie_ID=data['Movie_ID'])
+            res= {
+                "Movie_ID": movie.Movie_ID,
+                "Title": movie.Title,
+                "Poster": movie.Poster,
+                "Description": movie.Description,
+                "IMDB_Rating": movie.IMDB_Rating,
+                "User_Rating": movie.User_Rating
+            }
+            return JsonResponse(res, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
 def movieSearchApi(request):
@@ -83,6 +94,15 @@ def ratingAddApi(request):
         rating_serializer = RatingSerializer(data=rating_data)
         if rating_serializer.is_valid():
             rating_serializer.save()
+            all_ratings = Rating.objects.filter(Movie_ID=rating_data['Movie_ID'])
+            sum=0
+            cnt=0
+            for rate in all_ratings:
+                sum += rate.User_Rating
+                cnt += 1
+            movie=Movie.objects.get(Movie_ID=rating_data['Movie_ID'])
+            movie.User_Rating=sum / cnt
+            movie.save()
             return JsonResponse("Rating Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
@@ -95,7 +115,6 @@ def watchedListSearchApi(request):
     elif request.method == 'POST':
         data = json.loads(request.body)
         watched_data = WatchedList.objects.filter(User_ID=data['User_ID'])
-        print(watched_data)
         watched_serializer = WatchedListSerializer(watched_data, many=True)
         res = {"User_id":data["User_ID"]}
         for Watched in watched_data:
@@ -131,9 +150,9 @@ def userprofileRegisterApi(request):
     elif request.method == 'POST':
         userprofile_data = JSONParser().parse(request)
         userprofile_serializer = UserProfileSerializer(data=userprofile_data)
-        print(userprofile_data)
-        print(userprofile_serializer.is_valid())
-        print(userprofile_serializer)
+        # print(userprofile_data)
+        # print(userprofile_serializer.is_valid())
+        # print(userprofile_serializer)
         if userprofile_serializer.is_valid():
             userprofile_serializer.save()
             if userprofile_data['Email'] == "admin@admin.com" and userprofile_data['Password'] == "admin":
