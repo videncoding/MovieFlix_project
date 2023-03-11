@@ -22,7 +22,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'First_name',
             'Last_name',
             'Password',
-            'Role',
+            'is_staff',
             'Genres',
         )
 

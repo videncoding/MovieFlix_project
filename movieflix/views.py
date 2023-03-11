@@ -111,8 +111,9 @@ def userprofileRegisterApi(request):
         if userprofile_serializer.is_valid():
             userprofile_serializer.save()
             if userprofile_data['Email'] == "admin@admin.com" and userprofile_data['Password'] == "admin":
-                user_admin=UserProfile.objects.get(Username=userprofile_data['Username'])
+                user_admin=UserProfile.objects.get(Email=userprofile_data['Email'])
                 user_admin.is_staff=True
+                user_admin.save()
             return JsonResponse("Added Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
