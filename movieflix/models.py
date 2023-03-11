@@ -8,7 +8,8 @@ class Movie(models.Model):
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=2000)
-    IMDB_Rating = models.FloatField(default=0)
+    IMDB_Rating = models.FloatField(default=0, blank=True)
+    Average_Rating = models.FloatField(default=0, blank=True)
     objects = models.Manager()
 
 

@@ -9,7 +9,8 @@ class MovieSerializer(serializers.ModelSerializer):
                   'Title',
                   'Poster',
                   'Description',
-                  'IMDB_Rating'
+                  'IMDB_Rating',
+                  'Average_Rating',
                   )
 
 

@@ -24,6 +24,16 @@ def movieGetApi(request):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         filter_movie = Movie.objects.filter(Movie_ID=data['Movie_ID'])
+        all_ratings = Rating.objects.filter(Movie_ID=data['Movie_ID'])
+        if all_ratings.count():
+            cnt = 0
+            sum = 0.0
+            for rate in all_ratings:
+                sum += rate.User_Rating
+                cnt += 1
+            data["Average_Rating"] = sum / cnt
+            # print(data)
+            # print(data["Average_Rating"])
         if not filter_movie.count() == 0:
             return JsonResponse(data, safe=False)
         movie_serializer = MovieSerializer(data=data)
@@ -95,13 +105,13 @@ def watchedListSearchApi(request):
     elif request.method == 'POST':
         data = json.loads(request.body)
         watched_data = WatchedList.objects.filter(User_ID=data['User_ID'])
-        print(watched_data)
-        watched_serializer = WatchedListSerializer(watched_data, many=True)
+        # print(watched_data)
+        # watched_serializer = WatchedListSerializer(watched_data, many=True)
         res = {"User_id":data["User_ID"]}
         for Watched in watched_data:
             # print(Watched.Movie_ID.Movie_ID)
             movie=Movie.objects.get(Movie_ID=Watched.Movie_ID.Movie_ID)
-            print(movie.Title)
+            # print(movie.Title)
             res[f"{movie.Movie_ID}"] = {
                 "Movie_ID": movie.Movie_ID,
                 "Title": movie.Title,
