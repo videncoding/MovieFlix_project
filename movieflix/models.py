@@ -7,7 +7,7 @@ class Movie(models.Model):
     Movie_ID = models.IntegerField(default=0, unique=True, primary_key=True)
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
-    Description = models.CharField(max_length=200)
+    Description = models.CharField(max_length=2000)
     IMDB_Rating = models.IntegerField(default=0)
     objects = models.Manager()
 
