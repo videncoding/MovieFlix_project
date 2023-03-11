@@ -108,11 +108,14 @@ def userprofileRegisterApi(request):
     elif request.method == 'POST':
         userprofile_data = JSONParser().parse(request)
         userprofile_serializer = UserProfileSerializer(data=userprofile_data)
+        print(userprofile_data)
+        print(userprofile_serializer.is_valid())
+        print(userprofile_serializer)
         if userprofile_serializer.is_valid():
             userprofile_serializer.save()
             if userprofile_data['Email'] == "admin@admin.com" and userprofile_data['Password'] == "admin":
-                user_admin=UserProfile.objects.get(Username=userprofile_data['Username'])
-                user_admin.is_staff=True
+                user_admin = UserProfile.objects.get(Email=userprofile_data['Email'])
+                user_admin.is_staff = True
             return JsonResponse("Added Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
@@ -157,7 +160,7 @@ def userprofileLoginApi(request):
             'success': True,
             'User_ID': User_data.User_ID,
             'isStaff': User_data.is_staff,
-            'Genres':User_data.Genres,
+            'Genres': User_data.Genres,
             'mess': 'Login Successfully'
         }
         return JsonResponse(res, safe=False)
