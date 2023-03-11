@@ -8,7 +8,7 @@ class Movie(models.Model):
     Title = models.CharField(max_length=50)
     Poster = models.CharField(max_length=50)
     Description = models.CharField(max_length=2000)
-    IMDB_Rating = models.IntegerField(default=0)
+    IMDB_Rating = models.FloatField(default=0)
     objects = models.Manager()
 
 
@@ -35,7 +35,7 @@ class Rating(models.Model):
     Rating_ID = models.AutoField(primary_key=True)
     Movie_ID = models.ForeignKey(Movie, on_delete=models.CASCADE)
     User_ID = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    User_Rating = models.IntegerField(default=0)
+    User_Rating = models.FloatField(default=0)
     objects = models.Manager()
 
 

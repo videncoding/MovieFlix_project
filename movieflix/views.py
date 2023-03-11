@@ -57,6 +57,21 @@ def commentGetApi(request):
         comment_serializer = CommentSerializer(comment_data, many=True)
         return JsonResponse(comment_serializer.data, safe=False)
 
+def commentDel(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        comment_data = Comment.objects.filter(Comment_ID=data['Comment_ID'])
+        comment_data.delete()
+        res = {"msg": "Delete successful",
+               "status_code": 200}
+        return JsonResponse(res, safe=False)
+    res = {
+        "msg": "Delete successful",
+        "status_code": 500
+    }
+    return JsonResponse(res, safe=False)
+
+
 
 def ratingAddApi(request):
     if request.method == 'GET':

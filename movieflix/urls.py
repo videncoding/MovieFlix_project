@@ -9,6 +9,7 @@ urlpatterns = [
                   path('movie/movieSearch', csrf_exempt(views.movieSearchApi)),
                   path('comment/commentAdd', csrf_exempt(views.commentAddApi)),
                   path('comment/commentGet', csrf_exempt(views.commentGetApi)),
+                  path('comment/commentDel', csrf_exempt(views.commentDel)),
                   path('movie/SaveFile', views.SaveFile),
                   path('rating/ratingAdd', csrf_exempt(views.ratingAddApi)),
                   path('watchedList/watchedListAdd', csrf_exempt(views.watchedListAddApi)),
