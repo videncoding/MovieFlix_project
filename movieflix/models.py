@@ -13,12 +13,12 @@ class Movie(models.Model):
 
 
 class UserProfile(models.Model):
-    User_ID = models.IntegerField(default=0, unique=True, primary_key=True)
-    Username = models.IntegerField(default=0, unique=True)
-    First_name = models.CharField(max_length=30, blank=True)
-    Last_name = models.CharField(max_length=150, blank=True)
-    Password = models.CharField(max_length=30, blank=True)
-    Role = models.CharField(max_length=20, blank=True)
+    User_ID = models.AutoField(primary_key=True)
+    Email = models.EmailField(default=0, unique=True)
+    First_name = models.CharField(max_length=30)
+    Last_name = models.CharField(max_length=150)
+    Password = models.CharField(max_length=30)
+    is_staff = models.BooleanField(default=False, blank=True)
     Genres = models.CharField(max_length=20, blank=True)
     objects = models.Manager()
 
