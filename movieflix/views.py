@@ -57,6 +57,21 @@ def commentGetApi(request):
         comment_serializer = CommentSerializer(comment_data, many=True)
         return JsonResponse(comment_serializer.data, safe=False)
 
+def commentDel(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        comment_data = Comment.objects.filter(Comment_ID=data['Comment_ID'])
+        comment_data.delete()
+        res = {"msg": "Delete successful",
+               "status_code": 200}
+        return JsonResponse(res, safe=False)
+    res = {
+        "msg": "Delete successful",
+        "status_code": 500
+    }
+    return JsonResponse(res, safe=False)
+
+
 
 def ratingAddApi(request):
     if request.method == 'GET':
@@ -80,12 +95,20 @@ def watchedListSearchApi(request):
     elif request.method == 'POST':
         data = json.loads(request.body)
         watched_data = WatchedList.objects.filter(User_ID=data['User_ID'])
+        print(watched_data)
         watched_serializer = WatchedListSerializer(watched_data, many=True)
-        res={}
+        res = {"User_id":data["User_ID"]}
         for Watched in watched_data:
-            movie=Movie.objects.get(Movie_ID=Watched.Movie_ID)
-            movie_serializer = MovieSerializer(movie, many=True)
-            res=res+movie_serializer
+            # print(Watched.Movie_ID.Movie_ID)
+            movie=Movie.objects.get(Movie_ID=Watched.Movie_ID.Movie_ID)
+            print(movie.Title)
+            res[f"{movie.Movie_ID}"] = {
+                "Movie_ID": movie.Movie_ID,
+                "Title": movie.Title,
+                "Poster": movie.Poster,
+                "Description": movie.Description,
+                "IMDB_Rating": movie.IMDB_Rating
+            }
         return JsonResponse(res, safe=False)
 
 
