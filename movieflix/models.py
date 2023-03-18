@@ -16,10 +16,10 @@ class Movie(models.Model):
 class UserProfile(models.Model):
     User_ID = models.AutoField(primary_key=True)
     Email = models.EmailField(default=0, unique=True)
-    First_name = models.CharField(max_length=30)
-    Last_name = models.CharField(max_length=150)
+    First_Name = models.CharField(max_length=30)
+    Last_Name = models.CharField(max_length=150)
     Password = models.CharField(max_length=30)
-    is_staff = models.BooleanField(default=False, blank=True)
+    Is_Staff = models.BooleanField(default=False, blank=True)
     Genres = models.CharField(max_length=20, blank=True)
     objects = models.Manager()
 

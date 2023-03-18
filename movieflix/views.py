@@ -65,6 +65,12 @@ def commentGetApi(request):
         data = json.loads(request.body)
         comment_data = Comment.objects.filter(Movie_ID=data['Movie_ID'])
         comment_serializer = CommentSerializer(comment_data, many=True)
+        for comment in comment_serializer.data:
+            user_object = UserProfile.objects.filter(User_ID=comment['User_ID'])[0]
+            first_name = user_object.First_Name
+            last_name = user_object.Last_Name
+            comment['First_Name'] = first_name
+            comment['Last_Name'] = last_name
         return JsonResponse(comment_serializer.data, safe=False)
 
 def commentDel(request):
@@ -148,7 +154,7 @@ def userprofileRegisterApi(request):
             userprofile_serializer.save()
             if userprofile_data['Email'] == "admin@admin.com" and userprofile_data['Password'] == "admin":
                 user_admin = UserProfile.objects.get(Email=userprofile_data['Email'])
-                user_admin.is_staff = True
+                user_admin.Is_Staff = True
                 user_admin.save()
             return JsonResponse("Added Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
@@ -193,7 +199,7 @@ def userprofileLoginApi(request):
         res = {
             'success': True,
             'User_ID': User_data.User_ID,
-            'isStaff': User_data.is_staff,
+            'isStaff': User_data.Is_Staff,
             'Genres': User_data.Genres,
             'mess': 'Login Successfully'
         }
