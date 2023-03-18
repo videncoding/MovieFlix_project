@@ -201,7 +201,8 @@ def userprofileLoginApi(request):
             'User_ID': User_data.User_ID,
             'isStaff': User_data.Is_Staff,
             'Genres': User_data.Genres,
-            # 'First_Name': User_data.First_Name,
+            'First_Name': User_data.First_Name,
+            'Last_Name': User_data.Last_Name,
             'mess': 'Login Successfully'
         }
         return JsonResponse(res, safe=False)
