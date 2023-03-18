@@ -20,10 +20,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = (
             'User_ID',
             'Email',
-            'First_name',
-            'Last_name',
+            'First_Name',
+            'Last_Name',
             'Password',
-            'is_staff',
+            'Is_Staff',
             'Genres',
         )
 
