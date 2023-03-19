@@ -24,22 +24,30 @@ def movieGetApi(request):
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         filter_movie = Movie.objects.filter(Movie_ID=data['Movie_ID'])
-        all_ratings = Rating.objects.filter(Movie_ID=data['Movie_ID'])
-        if all_ratings.count():
-            cnt = 0
-            sum = 0.0
-            for rate in all_ratings:
-                sum += rate.User_Rating
-                cnt += 1
-            data["Average_Rating"] = sum / cnt
-            # print(data)
-            # print(data["Average_Rating"])
         if not filter_movie.count() == 0:
-            return JsonResponse(data, safe=False)
+            movie = Movie.objects.get(Movie_ID=data['Movie_ID'])
+            res = {
+                "Movie_ID": movie.Movie_ID,
+                "Title": movie.Title,
+                "Poster": movie.Poster,
+                "Description": movie.Description,
+                "IMDB_Rating": movie.IMDB_Rating,
+                "User_Rating": movie.Average_Rating
+            }
+            return JsonResponse(res, safe=False)
         movie_serializer = MovieSerializer(data=data)
         if movie_serializer.is_valid():
             movie_serializer.save()
-            return JsonResponse(data, safe=False)
+            movie=Movie.objects.get(Movie_ID=data['Movie_ID'])
+            res= {
+                "Movie_ID": movie.Movie_ID,
+                "Title": movie.Title,
+                "Poster": movie.Poster,
+                "Description": movie.Description,
+                "IMDB_Rating": movie.IMDB_Rating,
+                "User_Rating": movie.Average_Rating
+            }
+            return JsonResponse(res, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
 def movieSearchApi(request):
@@ -99,8 +107,18 @@ def ratingAddApi(request):
         rating_serializer = RatingSerializer(data=rating_data)
         if rating_serializer.is_valid():
             rating_serializer.save()
+            all_ratings = Rating.objects.filter(Movie_ID=rating_data['Movie_ID'])
+            sum=0
+            cnt=0
+            for rate in all_ratings:
+                sum += rate.User_Rating
+                cnt += 1
+            movie=Movie.objects.get(Movie_ID=rating_data['Movie_ID'])
+            movie.Average_Rating=sum / cnt
+            movie.save()
             return JsonResponse("Rating Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
+
 
 
 def watchedListSearchApi(request):
@@ -199,6 +217,7 @@ def userprofileLoginApi(request):
         res = {
             'success': True,
             'User_ID': User_data.User_ID,
+            'Email': User_data.Email,
             'isStaff': User_data.Is_Staff,
             'Genres': User_data.Genres,
             'First_Name': User_data.First_Name,
