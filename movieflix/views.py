@@ -141,7 +141,8 @@ def watchedListSearchApi(request):
                 "Title": movie.Title,
                 "Poster": movie.Poster,
                 "Description": movie.Description,
-                "IMDB_Rating": movie.IMDB_Rating
+                "IMDB_Rating": movie.IMDB_Rating,
+                "User_Rating": movie.Average_Rating
             }
         return JsonResponse(res, safe=False)
 
