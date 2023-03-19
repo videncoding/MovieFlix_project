@@ -45,6 +45,18 @@ INSTALLED_APPS = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+CORS_ALLOW_HEADERS = [
+'accept',
+'accept-encoding',
+'authorization',
+'content-type',
+'dnt',
+'origin',
+'user-agent',
+'x-csrftoken',
+'x-requested-with',
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
