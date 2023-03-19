@@ -90,7 +90,7 @@ def commentDel(request):
                "status_code": 200}
         return JsonResponse(res, safe=False)
     res = {
-        "msg": "Delete successful",
+        "msg": "Failed Delete!",
         "status_code": 500
     }
     return JsonResponse(res, safe=False)
