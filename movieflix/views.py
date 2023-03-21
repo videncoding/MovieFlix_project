@@ -171,7 +171,7 @@ def userprofileRegisterApi(request):
         print(userprofile_serializer)
         if userprofile_serializer.is_valid():
             userprofile_serializer.save()
-            if userprofile_data['Email'] == "admin@admin.com" and userprofile_data['Password'] == "admin123456":
+            if userprofile_data['Email'] == "admin@admin.com":
                 user_admin = UserProfile.objects.get(Email=userprofile_data['Email'])
                 user_admin.Is_Staff = True
                 user_admin.save()
