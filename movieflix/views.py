@@ -227,7 +227,19 @@ def userprofileLoginApi(request):
         }
         return JsonResponse(res, safe=False)
 
-
+def userprofileDel(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_data =UserProfile.objects.filter(User_ID=data['User_ID'])
+        user_data.delete()
+        res = {"msg": "Delete successful",
+               "status_code": 200}
+        return JsonResponse(res, safe=False)
+    res = {
+        "msg": "Failed Delete!",
+        "status_code": 500
+    }
+    return JsonResponse(res, safe=False)
 def SaveFile(request):
     file = request.FILES['myFile']
     file_name = default_storage.save(file.name, file)
