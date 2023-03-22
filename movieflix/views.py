@@ -1,6 +1,3 @@
-from django.contrib.auth import authenticate
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from django.http.response import JsonResponse
 from movieflix.models import Movie, UserProfile, Comment, Rating, WatchedList
@@ -8,11 +5,7 @@ from movieflix.serializers import MovieSerializer, UserProfileSerializer, Commen
     RatingSerializer, \
     WatchedListSerializer
 from django.core.files.storage import default_storage
-
-from rest_framework.response import Response
-from django.contrib.auth.hashers import make_password, check_password
 import json
-from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -50,6 +43,7 @@ def movieGetApi(request):
             return JsonResponse(res, safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
+
 def movieSearchApi(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -81,6 +75,7 @@ def commentGetApi(request):
             comment['Last_Name'] = last_name
         return JsonResponse(comment_serializer.data, safe=False)
 
+
 def commentDel(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -94,7 +89,6 @@ def commentDel(request):
         "status_code": 500
     }
     return JsonResponse(res, safe=False)
-
 
 
 def ratingAddApi(request):
@@ -118,7 +112,6 @@ def ratingAddApi(request):
             movie.save()
             return JsonResponse("Rating Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
-
 
 
 def watchedListSearchApi(request):
@@ -145,7 +138,6 @@ def watchedListSearchApi(request):
                 "User_Rating": movie.Average_Rating
             }
         return JsonResponse(res, safe=False)
-
 
 
 def watchedListAddApi(request):
@@ -178,12 +170,14 @@ def userprofileRegisterApi(request):
             return JsonResponse("Added Successfully!", safe=False)
         return JsonResponse("Failed to Add.", safe=False)
 
+
 def userprofileGetApi(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         userprofile_data = UserProfile.objects.filter(User_ID=data['User_ID'])
         userprofile_serializer = UserProfileSerializer(userprofile_data, many=True)
         return JsonResponse(userprofile_serializer.data, safe=False)
+
 
 def userprofilePutApi(request):
     if request.method == 'PUT':
@@ -227,6 +221,7 @@ def userprofileLoginApi(request):
         }
         return JsonResponse(res, safe=False)
 
+
 def userprofileDel(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -240,6 +235,8 @@ def userprofileDel(request):
         "status_code": 500
     }
     return JsonResponse(res, safe=False)
+
+
 def SaveFile(request):
     file = request.FILES['myFile']
     file_name = default_storage.save(file.name, file)
